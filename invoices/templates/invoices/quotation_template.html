@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quotation</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 0.5cm;
+        margin-top: 1cm;
+        margin-bottom: 1cm;
+        @frame footer_frame {
+          -pdf-frame-content: footerContent;
+          bottom: 0cm;
+          margin-left: 0.5cm;
+          margin-right: 0.5cm;
+          height: 1cm;
+        }
+      }
+      body {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 9pt;
+        color: #000;
+        line-height: 1.2;
+      }
+      .header-table {
+        width: 100%;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #366092;
+        padding-bottom: 5px;
+      }
+      .logo-text {
+        color: #366092;
+        font-size: 20pt;
+        font-weight: bold;
+      }
+      .logo-sub {
+        color: #366092;
+        font-size: 9pt;
+      }
+      .title {
+        text-align: center;
+        font-weight: bold;
+        text-decoration: underline;
+        margin-bottom: 15px;
+        font-size: 14pt;
+        margin-top: 10px;
+      }
+      .address-block {
+        margin-bottom: 15px;
+        font-size: 10pt;
+      }
+      .subject-block {
+        margin-bottom: 10px;
+        font-size: 10pt;
+      }
+      .content-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 10px;
+        /* font-size: 9pt; */
+        font-size: 10pt;
+        table-layout: fixed;
+      }
+      /* .content-table th,
+      .content-table td {
+        border: 1px solid #000;
+        /* padding: 4px; */
+        /* padding: 8px 6px;
+        vertical-align: top;
+        line-height: 1.5;
+      } */
+      
+      /* .content-table th {
+        background-color: #366092;
+        color: white;
+        text-align: center;
+        font-weight: bold;
+      } */
+      .content-table th
+      {
+        background-color: #366092;
+        color: white;
+        text-align: center;
+        font-weight: bold;
+      }
+      .content-table th, .content-table td
+      { 
+        border: 1px solid #000; 
+        padding: 2px 4px; 
+        vertical-align: top; 
+      }
+
+      .terms-box {
+        background-color: #b8cce4;
+        border: 1px solid #366092;
+        padding: 8px;
+        margin-top: 10px;
+        margin-bottom: 15px;
+        font-size: 9pt;
+      }
+      .footer-text {
+        text-align: center;
+        font-size: 7pt;
+        color: #555;
+        border-top: 1px solid #ccc;
+        padding-top: 5px;
+      }
+      .signature-area {
+    position: relative;
+    margin-top: 10px;
+    height: 80px; /* Fixed height ensures it won't push content to Page 2 */
+    page-break-inside: avoid;
+}
+
+/* Absolute positioning to mimic the screenshot exactly */
+.seal-overlay {
+    position: absolute;
+    left: 140px;   /* Adjust this to move the seal left/right */
+    top: 5px;      /* Adjust this to move the seal up/down */
+    z-index: 10;
+}
+
+.seal-image {
+    height: 95px;  /* Size of the stamp */
+    width: auto;
+    opacity: 0.9;  /* Makes it look more like a real stamp */
+}
+
+/* Tighten the table rows further to save space */
+/* .content-table td { 
+    padding: 2px 4px; 
+} */
+ /* .content-table td { */
+  /* Increase vertical padding slightly for better legibility */
+  /* padding: 6px 4px;  */
+  /* Use line-height to give breathing room between lines of text */
+  /* line-height: 1.4;
+} */
+/* .content-table td ul {
+  margin: 0;
+  padding-left: 15px;
+} */
+      .text-bold {
+        font-weight: bold;
+      }
+      .text-underline {
+        text-decoration: underline;
+      }
+      .text-right {
+        text-align: right;
+      }
+      .text-center {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <table class="header-table">
+      <tr>
+        <!-- <td style="width: 60%; vertical-align: top">
+          <img
+            src="D:\billing (3)\billing\billing_system\media\images\technotech_log.png"
+            style="height: 80px; width: auto"
+          />
+        </td> -->
+        <td style="width: 60%; vertical-align: top">
+          <img
+            src="C:\Users\LENOVO\Desktop\Billing project\billing_system\media\images\technotech_log.png"
+            style="height: 80px; width: auto"
+          />
+        </td>
+        <td style="width: 100%; text-align: center; vertical-align: middle;">
+          <h1 style="margin: 0; font-size: 28pt; font-style: italic;">
+            <span style="color: #d32f2f;">TECHNO</span>
+            <span style="color: #d32f2f;">TECH</span>
+            <p style="margin: 0; font-size: 10pt; color: #666; letter-spacing: 2px;">
+              Technologies
+            </p>
+          </h1>
+          </td>
+        <td style="width: 40%; vertical-align: top; text-align: right">
+          <!-- <div style="font-size: 9pt">
+            <strong>Date:</strong>&nbsp;{{ invoice.date|date:"d-m-Y" }}<br />
+            <strong>Ref No:</strong>&nbsp;{{ invoice.reference_no }}
+          </div> -->
+        </td>
+      </tr>
+    </table>
+
+    <div class="title">QUOTATION</div>
+        <div style="font-size: 10pt; width: 40%; vertical-align: top; text-align: right">
+      <strong>Date:</strong>&nbsp;{{ invoice.date|date:"d-m-Y" }}<br />
+      <strong>Ref No:</strong>&nbsp;{{ invoice.reference_no }}
+
+
+    </div>
+
+    <div class="address-block">
+      <strong>To</strong><br />
+      <strong>{{ invoice.office_company_name }}</strong><br />
+      <!-- prettier-ignore -->{%if invoice.office_phone_number%}<strong
+        >Tel:</strong
+      >
+      {{invoice.office_phone_number}}<br />{%endif%}
+      <!-- prettier-ignore -->{%if invoice.office_address%}{{invoice.office_address|linebreaksbr}}<br />{%endif%}
+      <strong>Kind Attn: {{invoice.client_name}}</strong><br />
+      <strong>Mob:</strong> {{invoice.mobile_number}}
+    </div>
+
+    <div class="subject-block">
+      <strong
+        >Sub: <span class="text-underline">{{ invoice.subject }}</span></strong
+      >
+    </div>
+
+    <div style="margin-bottom: 5px; font-size: 9pt">
+      Dear Concern,<br />
+      With reference to our discussions and visit to the site regarding the
+      above, we give below our offer for the same as follows:
+    </div>
+
+    <div style="margin-bottom: 3px; font-weight: bold">Scope of Works:</div>
+
+    <table class="content-table">
+      <thead>
+        <tr>
+          <th style="width: 8%">SL</th>
+          <th style="width: 52%">Job Description</th>
+          <th style="width: 10%">Qty.</th>
+          <th style="width: 15%">Rate</th>
+          <th style="width: 15%">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-center">1</td>
+          <td>{{ bulleted_desc|linebreaksbr }}</td>
+          <td class="text-center">{{ invoice.quantity }}</td>
+          <td class="text-right">{{ invoice.amount }}</td>
+          <td class="text-right">{{ subtotal }}</td>
+        </tr>
+        <tr>
+          <td colspan="3" style="border: none"></td>
+          <td class="text-bold">TOTAL</td>
+          <td class="text-bold text-right">{{ subtotal }}</td>
+        </tr>
+        <tr>
+          <td colspan="3" style="border: none"></td>
+          <td class="text-bold">ADD VAT (5%)</td>
+          <td class="text-bold text-right">{{ vat_amount }}</td>
+        </tr>
+        <tr>
+          <td colspan="3" style="border: none"></td>
+          <td class="text-bold" style="background-color: #eee">GRAND TOTAL</td>
+          <td class="text-bold text-right" style="background-color: #eee">
+            {{ total_with_vat }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div
+      style="
+        margin-bottom: 15px;
+        font-weight: bold;
+        text-decoration: underline;
+        font-size: 9pt;
+      "
+    >
+      Amount in words (AED): {{ amount_in_words|upper }}
+    </div>
+
+    <div class="terms-box">
+      <div
+        style="
+          font-weight: bold;
+          text-decoration: underline;
+          margin-bottom: 3px;
+        "
+      >
+        TERMS & CONDITIONS:
+      </div>
+      <table style="width: 100%; border: none">
+        <tr>
+          <td style="width: 70px; border: none; padding: 1px">Delivery</td>
+          <td style="border: none; padding: 1px">
+            : 1 to 5 Days from the date of Confirmation
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 1px">Payment</td>
+          <td style="border: none; padding: 1px">: Cash</td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 1px">Prices</td>
+          <td style="border: none; padding: 1px">: All the Prices are net</td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 1px">Validity</td>
+          <td style="border: none; padding: 1px">: 15 Days</td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="margin-bottom: 10px; font-size: 9pt">
+      We trust the above shall meet your approval and we look forward to receive
+      your order.<br />
+      If you have any queries please do not hesitate to call us.
+    </div>
+
+    <div style="margin-bottom: 10px; font-style: italic; font-size: 9pt">
+      Thanking you and assuring of our best services at all times.
+    </div>
+        <div class="signature-area">
+    <div class="seal-overlay">
+        <img src="C:\Users\LENOVO\Downloads\billing (3)\billing\billing_system\static\images\seal.png" 
+             class="seal-image" alt="Company Seal">
+    </div>
+
+    <div style="font-size: 10pt;">
+        Best Regards,<br />
+        <strong>Mohammed Irshad</strong><br />
+        <strong>Techno Tech Technologies.</strong>
+    </div>
+</div>
+    
+
+    <!-- <div style="font-size: 9pt">
+      Best Regards,<br />
+      <div style="height: 30px"></div>
+      <strong>Mohammed Irshad</strong><br />
+      <strong>Techno Tech Technologies.</strong>
+    </div> -->
+
+    <div id="footerContent">
+      <div class="footer-text">
+        Tel: +971 4 2209550, Fax: +971 4 2598525, Mob: +971 55 1143123, P.O.Box:
+        78267, Dubai-United Arab Emirates<br />
+        Office# 01, Al Hamda Building, Hor Al Anz, Deira, Dubai-UAE, Email:
+        info@technotechdubai.com, Web: www.technotechdubai.com
+      </div>
+    </div>
+  </body>
+</html>

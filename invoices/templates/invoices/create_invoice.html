@@ -1,0 +1,390 @@
+{% extends 'invoices/base.html' %} {% block content %}
+<style>
+  .form-section-title {
+    font-size: 0.95rem;
+    color: var(--accent-color);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--sidebar-border);
+    font-weight: 600;
+  }
+  .form-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--sidebar-border);
+    transition: var(--transition);
+  }
+  .form-control {
+    background-color: var(--card-bg) !important;
+    color: var(--text-main) !important;
+    border-color: var(--input-border) !important;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+  }
+  .form-control:focus {
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  }
+  .btn-submit {
+    background: linear-gradient(135deg, var(--accent-color) 0%, #4338ca 100%);
+    border: none;
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: var(--transition);
+  }
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
+    opacity: 0.9;
+  }
+  .input-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 0.3rem;
+    display: block;
+  }
+  .bg-light-themed {
+    background-color: var(--nav-link-hover-bg) !important;
+  }
+  .invalid-feedback {
+    display: block;
+    font-size: 0.75rem;
+    margin-top: 0.2rem;
+  }
+  /* Compact spacing */
+  .card-body {
+    padding: 1rem !important;
+  }
+  .row {
+    margin-bottom: 0.5rem !important;
+  }
+  .col-md-4,
+  .col-md-6,
+  .col-12 {
+    margin-bottom: 0.5rem !important;
+  }
+  .text-center {
+    margin-bottom: 0.75rem !important;
+  }
+  .alert {
+    padding: 0.75rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  textarea {
+    min-height: 60px !important;
+  }
+  .calculation-summary {
+    padding: 0.6rem !important;
+    margin-top: 0.5rem !important;
+    font-size: 0.85rem;
+  }
+  .calculation-summary .d-flex {
+    margin-bottom: 0.3rem !important;
+  }
+  h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem !important;
+  }
+  .form-text {
+    font-size: 0.75rem;
+    margin-top: 0.2rem !important;
+  }
+  .d-grid.gap-2 {
+    gap: 0.5rem !important;
+  }
+</style>
+
+<div class="row justify-content-center">
+  <div class="col-12">
+    <div class="card form-card shadow-sm border-0 rounded-3">
+      <div class="card-body">
+        <div class="text-center">
+          <h3 class="fw-bold" style="color: var(--text-main)">
+            {{ title|default:"Create New Quotation" }}
+          </h3>
+          <p class="text-muted mb-0" style="font-size: 0.85rem">
+            Fill in the details below to generate a professional quotation.
+          </p>
+        </div>
+
+        {% if form.errors %}
+        <div class="alert alert-danger border-0 shadow-sm rounded-3">
+          <h6 class="fw-bold mb-2" style="font-size: 0.9rem">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> Please fix the
+            following errors:
+          </h6>
+          <ul class="mb-0 small">
+            {% for field in form %} {% for error in field.errors %}
+            <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+            {% endfor %} {% endfor %} {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        <form method="post">
+          {% csrf_token %}
+
+          <!-- Section 1: Client Company Information -->
+          <div class="row">
+            <div class="col-12">
+              <h5 class="form-section-title">
+                <i class="bi bi-building"></i> Client Company Information
+              </h5>
+            </div>
+            <div class="col-md-4">
+              <label class="input-label">Client / Company Name</label>
+              {{ form.office_company_name }}
+            </div>
+            <div class="col-md-4">
+              <label class="input-label">Client Tel</label>
+              {{ form.office_phone_number }}
+            </div>
+            <div class="col-md-4">
+              <label class="input-label">Company Address</label>
+              {{ form.office_address }}
+            </div>
+          </div>
+
+          <!-- Section 2: Contact Person (Kind Attn) -->
+          <div class="row">
+            <div class="col-12">
+              <h5 class="form-section-title">
+                <i class="bi bi-person-badge"></i> Contact Person Details
+              </h5>
+            </div>
+            <div class="col-md-6">
+              <label class="input-label">Kind Attn (Contact Person)</label>
+              {{ form.client_name }}
+            </div>
+            <div class="col-md-6">
+              <label class="input-label">Mobile Number</label>
+              {{ form.mobile_number }}
+            </div>
+          </div>
+
+          <!-- Section 3: Project & Work Details -->
+          <div class="row">
+            <div class="col-12">
+              <h5 class="form-section-title">
+                <i class="bi bi-file-earmark-text"></i> Quotation Details
+              </h5>
+            </div>
+            <div class="col-12">
+              <label class="input-label">Subject / Project Title</label>
+              {{ form.subject }}
+            </div>
+            <div class="col-md-10">
+              <label class="input-label"
+                >Detailed Scope of Work / Description</label
+              >
+              {{ form.work_description }}
+            </div>
+            <div class="col-md-2">
+              <label class="input-label">Quantity</label>
+              {{ form.quantity }}
+            </div>
+            <div class="col-md-3">
+              <label class="input-label">Reference Number</label>
+              {{ form.reference_no }}
+            </div>
+            <div class="col-md-3">
+              <label class="input-label">Date of Issue</label>
+              {{ form.date }}
+            </div>
+            <div class="col-md-2">
+              <label class="input-label">Amount (AED)</label>
+              {{ form.amount }}
+            </div>
+            <div class="col-md-4">
+              <div
+                class="calculation-summary bg-light-themed rounded-2 border"
+                style="border-color: var(--sidebar-border) !important"
+              >
+                <div class="d-flex justify-content-between">
+                  <span class="text-muted">Sub Total:</span>
+                  <span
+                    class="fw-bold text-dark"
+                    style="color: var(--text-main) !important"
+                    >AED <span id="summary-subtotal">0.00</span></span
+                  >
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span class="text-muted">VAT (5%):</span>
+                  <span class="text-danger fw-bold"
+                    >AED <span id="summary-vat">0.00</span></span
+                  >
+                </div>
+                <div
+                  class="d-flex justify-content-between pt-2 border-top"
+                  style="
+                    border-color: var(--sidebar-border) !important;
+                    margin-top: 0.3rem;
+                    padding-top: 0.3rem !important;
+                  "
+                >
+                  <span
+                    class="fw-bold text-dark"
+                    style="color: var(--text-main) !important"
+                    >Grand Total:</span
+                  >
+                  <span
+                    class="fw-bold text-primary"
+                    style="color: var(--accent-color) !important"
+                    >AED <span id="summary-total">0.00</span></span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="d-flex justify-content-end gap-2"
+            style="margin-top: 0.75rem"
+          >
+            <a
+              href="{% url 'invoice_list' %}"
+              class="btn btn-light px-3 py-2 fw-semibold"
+              style="font-size: 0.9rem"
+              >Cancel</a
+            >
+            <button type="submit" class="btn btn-primary btn-submit px-4 py-2">
+              <i class="bi bi-check-circle me-2"></i>Save & Generate Quotation
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div
+  class="modal fade"
+  id="successModal"
+  tabindex="-1"
+  aria-labelledby="successModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="successModalLabel">
+          <i class="bi bi-check-circle-fill me-2"></i>Quotation Created
+          Successfully!
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        {% if created_invoice %}
+        <p class="mb-3">
+          Your quotation <strong>{{ created_invoice.reference_no }}</strong> has
+          been created successfully.
+        </p>
+        <div class="d-grid gap-2">
+          <a
+            href="{% url 'generate_quotation' created_invoice.id %}"
+            class="btn btn-primary"
+            target="_blank"
+          >
+            <i class="bi bi-file-earmark-pdf me-2"></i>Download Quotation PDF
+          </a>
+          <a
+            href="{% url 'generate_pdf' created_invoice.id %}"
+            class="btn btn-outline-primary"
+            target="_blank"
+          >
+            <i class="bi bi-file-earmark-text me-2"></i>Download Invoice PDF
+          </a>
+        </div>
+        {% endif %}
+      </div>
+      <div class="modal-footer">
+        <a href="{% url 'invoice_list' %}" class="btn btn-secondary"
+          >Go to Quotation List</a
+        >
+        <a href="{% url 'invoice_create' %}" class="btn btn-primary"
+          >Create Another</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Dynamic Form Control Enhancement
+    var inputs = document.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]), select, textarea');
+    inputs.forEach(function (input) {
+      if (input.tagName === "INPUT" || input.tagName === "TEXTAREA" || input.tagName === "SELECT") {
+        input.classList.add("form-control");
+      }
+    });
+
+    // Special handling for textareas
+    var textareas = document.querySelectorAll("textarea");
+    textareas.forEach(function (textarea) {
+      textarea.rows = 2;
+      textarea.placeholder = "Enter detailed description here...";
+    });
+
+    // Live Calculation Logic
+    const amountInput = document.getElementById("id_amount");
+    const quantityInput = document.getElementById("id_quantity");
+    const subTotalDisplay = document.getElementById("summary-subtotal");
+    const vatDisplay = document.getElementById("summary-vat");
+    const totalDisplay = document.getElementById("summary-total");
+
+    if (amountInput && quantityInput) {
+      function updateCalculations() {
+        const amount = parseFloat(amountInput.value) || 0;
+        const quantity = parseFloat(quantityInput.value) || 1;
+        const subtotal = amount * quantity;
+        const vat = subtotal * 0.05;
+        const total = subtotal + vat;
+
+        if (subTotalDisplay)
+          subTotalDisplay.textContent = subtotal.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+        if (vatDisplay)
+          vatDisplay.textContent = vat.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+        if (totalDisplay)
+          totalDisplay.textContent = total.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+      }
+
+      amountInput.addEventListener("input", updateCalculations);
+      quantityInput.addEventListener("input", updateCalculations);
+      updateCalculations();
+    }
+
+    // Show Success Modal
+    {% if created_invoice %}
+    const successModalElement = document.getElementById('successModal');
+    if (successModalElement) {
+      const successModal = new bootstrap.Modal(successModalElement);
+      successModal.show();
+    }
+    {% endif %}
+  });
+</script>
+{% endblock %}

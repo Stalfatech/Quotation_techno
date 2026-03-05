@@ -1,0 +1,434 @@
+    <!-- <style>
+        @page {
+            size: A4;
+            margin: 0.5cm;
+        }
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 9pt;
+            color: #000;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .header-table td {
+            vertical-align: top;
+        }
+        .company-name {
+            font-size: 20pt;
+            font-weight: bold;
+            color: red;
+            text-align: right;
+            text-transform: uppercase;
+        }
+        .company-sub {
+            text-align: right;
+            font-size: 8pt;
+            color: #555;
+        }
+        .title-box {
+            text-align: center;
+            border: 1px solid #000;
+            padding: 5px;
+            margin: 10px auto;
+            width: 200px;
+            font-weight: bold;
+            font-size: 14pt;
+        }
+        .trn-box {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .info-table {
+            margin-bottom: 15px;
+        }
+        .info-table td {
+            border: 1px solid #000;
+            padding: 5px;
+            vertical-align: top;
+        }
+        .info-label {
+            background-color: #ddd;
+            font-weight: bold;
+            width: 15%;
+        }
+        .items-table {
+            margin-bottom: 10px;
+        }
+        .items-table th, .items-table td {
+            border: 1px solid #000;
+            padding: 4px;
+            vertical-align: top;
+            text-align: left;
+        }
+        .items-table th {
+            background-color: #ccc;
+            text-align: center;
+            font-weight: bold;
+        }
+        .items-table td.amount {
+            text-align: right;
+        }
+        .amount-words {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 10px;
+        }
+        .bank-details {
+            font-size: 8pt;
+            margin-bottom: 20px;
+        }
+        .footer-table {
+            width: 100%;
+            margin-top: 20px;
+        }
+        .footer-table td {
+            vertical-align: bottom;
+        }
+        .bottom-contact {
+            text-align: center;
+            font-size: 7pt;
+            color: #555;
+            border-top: 1px solid #ccc;
+            padding-top: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <table class="header-table">
+        <tr>
+            <td style="width: 50%;">
+                <img src="D:\billing (3)\billing\billing_system\media\images\technotech_log.png" style="height: 80px; width: auto;">
+            </td>
+            <td style="width: 50%; text-align: right;">
+                 <div style="border-bottom: 2px solid blue; padding-bottom: 10px; display: inline-block;">
+                    <div class="company-name">TECHNO TECH <span style="font-size: 10pt; color: #000;">Technologies</span></div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <div class="title-box">TAX INVOICE</div>
+    <div class="trn-box">TRN No: 100444567000003</div>
+
+    <table class="info-table">
+        <tr>
+            <td class="info-label">Name :</td>
+            <td style="width: 35%;">{{invoice.client_name}}</td>
+            <td class="info-label">Invoice no:</td>
+            <td>{{ invoice.invoice_number }}</td>
+        </tr>
+        <tr>
+            <td class="info-label">Address :</td>
+            <td>{{ invoice.office_address }}</td>
+            <td class="info-label">Date</td>
+            <td>{{ invoice.date|date:"d-m-Y" }}</td>
+        </tr>
+        <tr>
+            <td class="info-label">TRN:</td>
+            <td>100005693500003</td>
+            <td class="info-label">Job Location</td>
+            <td>DIC</td>
+        </tr>
+        <tr>
+            <td class="info-label">Location:</td>
+            <td colspan="3">DUBAI - UAE</td>
+        </tr>
+    </table>
+
+    <table class="items-table">
+        <tr>
+            <th style="width: 5%;">SL:</th>
+            <th style="width: 55%;">Job Description</th>
+            <th style="width: 10%;">Qty.</th>
+            <th style="width: 15%;">Rate</th>
+            <th style="width: 15%;">Amount</th>
+        </tr>
+        <tr>
+            <td style="text-align: center;">1</td>
+            <td>
+                <div style="font-size: 8.5pt;">{{ bulleted_desc|linebreaksbr }}</div>
+            </td>
+            <td style="text-align: center;">{{ invoice.quantity }}</td>
+            <td class="amount">{{ invoice.amount }}</td>
+            <td class="amount">{{ subtotal }}</td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: right; font-weight: bold;">GRAND TOTAL</td>
+            <td class="amount"><b>{{ subtotal }}</b></td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: right; font-weight: bold;">ADD VAT (5%)</td>
+            <td class="amount"><b>{{ vat_amount }}</b></td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: right; font-weight: bold;">NET TOTAL</td>
+            <td class="amount"><b>{{ total_with_vat }}</b></td>
+        </tr>
+    </table>
+
+    <div class="amount-words">
+        Amount in words: {{ amount_in_words }} ONLY.
+    </div>
+
+    <div class="bank-details">
+        <b>BANK DETAILS: -</b><br>
+        NAME: TECHNO TECH TECHNOLOGIES<br>
+        BANK: SHARJAH ISLAMIC BANK<br>
+        ACCOUNT NO: 0012148757001<br>
+        IBAN: AE590410000012148757001<br>
+        SWIFT CODE: NBSHAEAS
+    </div>
+
+    <table class="footer-table">
+        <tr>
+            <td style="text-align: left; font-weight: bold;">Receivers' Signature</td>
+            <td style="text-align: right; font-weight: bold;">For: Techno Tech Technologies</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: right; padding-top: 10px;">
+                <img src="D:\billing (3)\billing\billing_system\media\images\stamp.jpeg" style="height: 80px; width: auto;">
+            </td>
+        </tr>
+    </table>
+
+    <div class="bottom-contact">
+        Tel: +971 4 2209550, Fax: +971 4 2598525, Mob: +971 55 1143123, P.O.Box: 78267, Dubai-United Arab Emirates<br>
+        Office# 01, Al Hamda Building, Hor Al Anz, Deira, Dubai-UAE, Email: info@technotechdubai.com, Web: www.technotechdubai.com
+    </div>
+
+</body>
+</html> -->
+
+<style>
+        @page {
+            size: A4;
+            margin: 0.5cm;
+            margin-bottom: 2.0cm;
+            @frame footer_frame {
+                -pdf-frame-content: footerContent;
+                bottom: 0.5cm;
+                margin-left: 0.5cm;
+                margin-right: 0.5cm;
+                height: 1.0cm;
+            }
+        }
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 9pt;
+            color: #000;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .header-table td {
+            vertical-align: top;
+        }
+        .company-name {
+            font-size: 20pt;
+            font-weight: bold;
+            color: red;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .company-sub {
+            text-align: right;
+            font-size: 8pt;
+            color: #555;
+        }
+        .title-box {
+            text-align: center;
+            border: 1px solid #000;
+            padding: 5px;
+            margin: 10px auto;
+            width: 200px;
+            font-weight: bold;
+            font-size: 14pt;
+        }
+        .trn-box {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .info-table {
+            margin-bottom: 15px;
+        }
+        .info-table td {
+            border: 1px solid #000;
+            padding: 5px;
+            vertical-align: top;
+        }
+        .info-label {
+            background-color: #ddd;
+            font-weight: bold;
+            width: 15%;
+        }
+        .items-table {
+            margin-bottom: 10px;
+        }
+        .items-table th, .items-table td {
+            border: 1px solid #000;
+            padding: 4px;
+            vertical-align: top;
+            text-align: left;
+        }
+        .items-table th {
+            background-color: #ccc;
+            text-align: center;
+            font-weight: bold;
+        }
+        .items-table td.amount {
+            text-align: right;
+        }
+        .amount-words {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 10px;
+        }
+        .bank-details {
+            font-size: 8pt;
+            margin-bottom: 20px;
+        }
+        .footer-table {
+            width: 100%;
+            margin-top: 20px;
+        }
+        .footer-table td {
+            vertical-align: bottom;
+        }
+        .bottom-contact {
+            text-align: center;
+            font-size: 7pt;
+            color: #555;
+            border-top: 1px solid #ccc;
+            padding-top: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <table class="header-table">
+        <tr>
+            <!-- <td style="width: 50%;">
+                <img src="D:\billing (3)\billing\billing_system\media\images\technotech_log.png" style="height: 80px; width: auto;">
+            </td> -->
+            <td style="width: 50%;">
+                <img src="C:\Users\LENOVO\Desktop\Billing project\billing_system\media\images\technotech_log.png" style="height: 80px; width: auto;">
+            </td>
+            <!-- <td style="width: 50%; text-align: center;">
+                 <div style="border-bottom: 2px solid blue; padding-bottom: 5px; display: inline-block;">
+                    <div class="company-name">TECHNO TECH <span style="font-size: 10pt; color: #000;">Technologies</span></div>
+                </div>
+            </td> -->
+            <td style="width: 100%; text-align: center; vertical-align: middle;">
+                <h1 style="margin: 0; padding: 0; font-size: 32pt; font-style: italic; font-weight: bold; line-height: 1.1;">
+                    <span style="color: #d32f2f;">TECHNO</span>
+                    <span style="color: #d32f2f;">TECH</span>
+                    <p style="margin: 0; padding: 0; font-size: 12pt; color: #666; letter-spacing: 4px; font-weight: normal; text-align: center;">Technologies</p>
+                </h1>
+            </td>
+        </tr>
+    </table>
+
+    <div class="title-box">TAX INVOICE</div>
+    <div class="trn-box">TRN No: 100444567000003</div>
+
+    <table class="info-table">
+        <tr>
+            <td class="info-label">Name :</td>
+            <td style="width: 35%;">{{invoice.client_name}}</td>
+            <td class="info-label">Invoice no:</td>
+            <td>{{ invoice.invoice_number }}</td>
+        </tr>
+        <tr>
+            <td class="info-label">Address :</td>
+            <td>{{ invoice.office_address }}</td>
+            <td class="info-label">Date</td>
+            <td>{{ invoice.date|date:"d-m-Y" }}</td>
+        </tr>
+        <tr>
+            <td class="info-label">TRN:</td>
+            <td>100005693500003</td>
+            <td class="info-label">Job Location</td>
+            <td>DIC</td>
+        </tr>
+        <tr>
+            <td class="info-label">Location:</td>
+            <td colspan="3">DUBAI - UAE</td>
+        </tr>
+    </table>
+
+    <table class="items-table">
+        <tr>
+            <th style="width: 5%;">SL:</th>
+            <th style="width: 55%;">Job Description</th>
+            <th style="width: 10%;">Qty.</th>
+            <th style="width: 15%;">Rate</th>
+            <th style="width: 15%;">Amount</th>
+        </tr>
+        <tr>
+            <td style="text-align: center;">1</td>
+            <td>
+                <div style="font-size: 8.5pt;">{{ bulleted_desc|linebreaksbr }}</div>
+            </td>
+            <td style="text-align: center;">{{ invoice.quantity }}</td>
+            <td class="amount">{{ invoice.amount }}</td>
+            <td class="amount">{{ subtotal }}</td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: right; font-weight: bold;">GRAND TOTAL</td>
+            <td class="amount"><b>{{ subtotal }}</b></td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: right; font-weight: bold;">ADD VAT (5%)</td>
+            <td class="amount"><b>{{ vat_amount }}</b></td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: right; font-weight: bold;">NET TOTAL</td>
+            <td class="amount"><b>{{ total_with_vat }}</b></td>
+        </tr>
+    </table>
+
+    <div class="amount-words">
+        Amount in words: {{ amount_in_words }} ONLY.
+    </div>
+
+    <div class="bank-details">
+        <b>BANK DETAILS: -</b><br>
+        NAME: TECHNO TECH TECHNOLOGIES<br>
+        BANK: SHARJAH ISLAMIC BANK<br>
+        ACCOUNT NO: 0012148757001<br>
+        IBAN: AE590410000012148757001<br>
+        SWIFT CODE: NBSHAEAS
+    </div>
+
+    <table class="footer-table">
+        <tr>
+            <td style="text-align: left; font-weight: bold;">Receivers' Signature</td>
+            <td style="text-align: right; font-weight: bold;">For: Techno Tech Technologies</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: right; padding-top: 10px;">
+                <!-- <img src="D:\billing (3)\billing\billing_system\media\images\stamp.jpeg" style="height: 80px; width: auto;"> -->
+                <img src="C:\Users\LENOVO\Desktop\Billing project\billing_system\media\images\stamp.jpeg" style="height: 80px; width: auto;">
+            </td>
+        </tr>
+    </table>
+
+    <div id="footerContent">
+        <div class="bottom-contact">
+            Tel: +971 4 2209550, Fax: +971 4 2598525, Mob: +971 55 1143123, P.O.Box: 78267, Dubai-United Arab Emirates<br>
+            Office# 01, Al Hamda Building, Hor Al Anz, Deira, Dubai-UAE, Email: info@technotechdubai.com, Web: www.technotechdubai.com
+        </div>
+    </div>
+
+</body>
+</html>

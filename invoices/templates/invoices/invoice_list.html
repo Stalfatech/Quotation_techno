@@ -1,0 +1,196 @@
+{% extends 'invoices/base.html' %} {% block content %}
+<style>
+  .table-responsive {
+    overflow: visible !important;
+  }
+  .dropdown-menu {
+    z-index: 9999 !important;
+  }
+</style>
+
+<div class="row justify-content-center">
+  <div class="col-12">
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-body p-3 p-md-4">
+       
+        <div
+          class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3"
+        >
+          <div>
+            <h4 class="fw-bold m-0" style="color: var(--text-main)">
+              Quotation List
+            </h4>
+            <p class="text-muted small mb-0">Manage your quotes and invoices</p>
+          </div>
+          <a
+            href="{% url 'invoice_create' %}"
+            class="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 fw-semibold rounded-3"
+          >
+            <i class="bi bi-plus-lg"></i>
+            <span>New Quotation</span>
+          </a>
+        </div>
+
+        <!-- Search and Filter -->
+        <form method="get" class="mb-4" id="filterForm">
+          <div class="row g-3">
+            <div class="col-lg-5 col-md-12">
+              <div
+                class="input-group search-group shadow-sm rounded-3 overflow-hidden"
+              >
+                <span
+                  class="input-group-text bg-white border-end-0 text-muted px-3"
+                  style="
+                    background-color: var(--card-bg) !important;
+                    border-color: var(--input-border) !important;
+                  "
+                >
+                  <i class="bi bi-search"></i>
+                </span>
+                <input
+                  type="text"
+                  name="search"
+                  id="searchInput"
+                  class="form-control border-start-0 ps-0"
+                  placeholder="Search client, invoice number..."
+                  value="{{ search_query }}"
+                  style="
+                    background-color: var(--card-bg);
+                    color: var(--text-main);
+                    border-color: var(--input-border);
+                  "
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-5">
+              <div class="form-floating shadow-sm">
+                <input
+                  type="date"
+                  name="date_from"
+                  id="dateFrom"
+                  class="form-control"
+                  style="
+                    background-color: var(--card-bg);
+                    color: var(--text-main);
+                    border-color: var(--input-border);
+                  "
+                  value="{{ date_from }}"
+                />
+                <label for="dateFrom" class="text-muted">From Date</label>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-5">
+              <div class="form-floating shadow-sm">
+                <input
+                  type="date"
+                  name="date_to"
+                  id="dateTo"
+                  class="form-control"
+                  style="
+                    background-color: var(--card-bg);
+                    color: var(--text-main);
+                    border-color: var(--input-border);
+                  "
+                  value="{{ date_to }}"
+                />
+                <label for="dateTo" class="text-muted">To Date</label>
+              </div>
+            </div>
+
+            <div class="col-lg-1 col-md-2 d-md-flex">
+              <a
+                href="{% url 'invoice_list' %}"
+                class="btn btn-light border w-100 d-flex align-items-center justify-content-center shadow-sm rounded-3"
+                style="
+                  background-color: var(--card-bg);
+                  color: var(--text-muted);
+                  border-color: var(--input-border);
+                "
+                title="Clear Filters"
+              >
+                <i class="bi bi-arrow-counterclockwise"></i>
+              </a>
+            </div>
+          </div>
+        </form>
+
+        <!-- Table Container -->
+        <div id="invoice-table-container">
+          {% include 'invoices/partials/invoice_table_partial.html' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("filterForm");
+    const tableContainer = document.getElementById("invoice-table-container");
+    const inputs = form.querySelectorAll("input");
+
+    // Debounce function
+    function debounce(func, timeout = 300) {
+      let timer;
+      return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          func.apply(this, args);
+        }, timeout);
+      };
+    }
+
+    // Function to fetch updated table
+    function fetchTable(url = null) {
+      const formData = new FormData(form);
+      const params = new URLSearchParams(formData);
+
+      // If a URL is provided (for pagination), use it but preserve current filter params if needed
+      // But typically for pagination updates we want the URL from the link
+      let fetchUrl = url
+        ? url
+        : `${window.location.pathname}?${params.toString()}`;
+
+      fetch(fetchUrl, {
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      })
+        .then((response) => response.text())
+        .then((html) => {
+          tableContainer.innerHTML = html;
+          // Re-attach pagination listeners since HTML was replaced
+          attachPaginationListeners();
+        })
+        .catch((error) => console.error("Error:", error));
+    }
+
+    // Attach listeners to inputs
+    const debouncedFetch = debounce(() => fetchTable());
+
+    inputs.forEach((input) => {
+      input.addEventListener("input", debouncedFetch);
+      input.addEventListener("change", debouncedFetch);
+    });
+
+    // Pagination Click Handling
+    function attachPaginationListeners() {
+      const paginationLinks = tableContainer.querySelectorAll(".page-link");
+      paginationLinks.forEach((link) => {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          const url = this.getAttribute("href");
+          if (url && url !== "#") {
+            fetchTable(url);
+          }
+        });
+      });
+    }
+
+    // Initial attachment
+    attachPaginationListeners();
+  });
+</script>
+{% endblock %}
